@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS chat_rooms;
+DROP TABLE IF EXISTS chat_messages;
 DROP TABLE IF EXISTS wishes;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS product;
@@ -69,6 +71,30 @@ CREATE TABLE points (
                         user_id BIGINT NOT NULL,
                         CONSTRAINT fk_point_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- Create ChatRoom table
+CREATE TABLE chat_rooms (
+                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                            user1_id BIGINT NOT NULL,
+                            user2_id BIGINT NOT NULL,
+                            title VARCHAR(255),
+                            CONSTRAINT fk_chat_room_user1 FOREIGN KEY (user1_id) REFERENCES users(id),
+                            CONSTRAINT fk_chat_room_user2 FOREIGN KEY (user2_id) REFERENCES users(id)
+);
+
+-- Create ChatMessage table
+CREATE TABLE chat_messages (
+                               id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                               chat_room_id BIGINT NOT NULL,
+                               user_id BIGINT NOT NULL,
+                               content VARCHAR(255),
+                               timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                               message_type VARCHAR(50),
+                               CONSTRAINT fk_chat_message_chat_room FOREIGN KEY (chat_room_id) REFERENCES chat_rooms(id),
+                               CONSTRAINT fk_chat_message_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
 
 
 /*

@@ -1,9 +1,10 @@
 package gift.controller.user;
 
+import gift.controller.docs.user.UserApiDocs;
 import gift.domain.user.User;
-import gift.exception.user.InvalidCredentialsException;
-import gift.exception.user.UserAlreadyExistsException;
-import gift.exception.user.UserNotFoundException;
+import gift.global.exception1.user.InvalidCredentialsException;
+import gift.global.exception1.user.UserAlreadyExistsException;
+import gift.global.exception1.user.UserNotFoundException;
 import gift.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/members")
-public class UserController {
+public class UserController implements UserApiDocs {
     private final UserService userService;
 
     @Autowired

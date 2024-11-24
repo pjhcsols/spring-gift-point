@@ -31,9 +31,11 @@ public class SecurityConfig {
                 .cors(withDefaults()) // CORS 설정 통합
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
+                                .requestMatchers("/ws/**").permitAll() // WebSocket 경로 허용
                                 .requestMatchers("/admin/**").permitAll()
                                 .requestMatchers("/api/**").permitAll() // /api 경로에 대해 접근 허용
                                 .requestMatchers("/oauth2/**").permitAll() // OAuth2 경로에 대해 접근 허용
+                                .requestMatchers("/v1/**").permitAll()
                                 .anyRequest().permitAll() // 다른 모든 요청은 허용
                 )
                 .formLogin(formLogin ->
@@ -42,8 +44,7 @@ public class SecurityConfig {
                                 .permitAll()
                 )
                 .logout(logout ->
-                        logout
-                                .permitAll()
+                        logout.permitAll()
                 );
 
         return http.build();
@@ -53,12 +54,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080")); // 패턴 사용
+        //configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080")); // 패턴 사용
         //configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080", "http://*.example.com"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true); // 쿠키 및 인증 정보를 허용
+        //configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        //configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Disposition"));
+
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

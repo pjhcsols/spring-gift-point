@@ -1,9 +1,9 @@
 package gift.service.wish;
 
 import gift.domain.wish.Wish;
-import gift.exception.product.ProductNotFoundException;
-import gift.exception.wish.WishCanNotModifyException;
-import gift.exception.wish.WishNotFoundException;
+import gift.global.exception1.product.ProductNotFoundException;
+import gift.global.exception1.wish.WishCanNotModifyException;
+import gift.global.exception1.wish.WishNotFoundException;
 import gift.repository.product.ProductRepository;
 import gift.repository.wish.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;

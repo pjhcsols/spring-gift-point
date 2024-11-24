@@ -1,6 +1,5 @@
 package gift.util;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,6 +61,58 @@ public class ImageStorageUtil {
         }
     }
 
+    //chat
+    // 채팅 이미지 저장 메서드
+    public String saveChatImage(MultipartFile imageFile, String folderPath) throws IOException {
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        String imageName = "image_" + timestamp + ".jpg";
+
+        File storageDir = new File(STORAGE_DIR + folderPath);
+        logger.info("Attempting to save image at path: {}", storageDir.getAbsolutePath());
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+
+        File outputFile = new File(storageDir, imageName);
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+            fos.write(imageFile.getBytes());
+        }
+
+        String filePath = outputFile.getAbsolutePath();
+        logger.info("Chat image saved successfully at path: {}", filePath);
+        return filePath;
+    }
+
+    // Base64 데이터를 이미지 파일로 저장하는 공통 메서드
+    public String saveBase64Image(String fileBase64, String folderPath) throws IOException {
+        byte[] decodedBytes = Base64.getDecoder().decode(fileBase64);
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        String imageName = "image_" + timestamp + ".jpg";
+
+        File storageDir = new File(STORAGE_DIR + folderPath);
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+
+        File outputFile = new File(storageDir, imageName);
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+            fos.write(decodedBytes);
+        }
+
+        return outputFile.getAbsolutePath();  // 파일 경로 반환
+    }
+
+    // 채팅방 이미지 폴더 삭제 메서드
+    public void deleteChatFolder(String folderPath) {
+        File folder = new File(STORAGE_DIR + folderPath);
+        if (folder.exists()) {
+            for (File file : folder.listFiles()) {
+                file.delete();
+            }
+            folder.delete();
+            logger.info("Chat folder deleted successfully: {}", folderPath);
+        }
+    }
 
 }
 

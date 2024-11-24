@@ -3,9 +3,9 @@ package gift.service.user;
 
 import gift.domain.point.Point;
 import gift.domain.user.User;
-import gift.exception.user.InvalidCredentialsException;
-import gift.exception.user.UserAlreadyExistsException;
-import gift.exception.user.UserNotFoundException;
+import gift.global.exception1.user.InvalidCredentialsException;
+import gift.global.exception1.user.UserAlreadyExistsException;
+import gift.global.exception1.user.UserNotFoundException;
 import gift.repository.point.PointRepository;
 import gift.repository.user.UserRepository;
 import gift.util.JwtTokenUtil;
@@ -41,6 +41,10 @@ public class UserService {
         }
 
         return jwtTokenUtil.generateAccessToken(email);
+    }
+
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
     }
 
     public Optional<User> findByEmail(String email) {
@@ -111,6 +115,5 @@ public class UserService {
 
         return tokens;
     }
-
 
 }

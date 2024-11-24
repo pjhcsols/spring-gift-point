@@ -1,4 +1,4 @@
-package gift.exception.product;
+package gift.global.exception1.product;
 
 public class ProductNotFoundException extends RuntimeException {
     public ProductNotFoundException(Long productId) {
