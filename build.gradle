@@ -49,6 +49,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     // 데이터 베이스 연결 풀 설정
     implementation 'com.zaxxer:HikariCP'
+
+    implementation 'net.bytebuddy:byte-buddy:1.14.9'
+
 }
 
 tasks.named('test') {

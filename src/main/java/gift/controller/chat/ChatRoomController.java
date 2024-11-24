@@ -1,8 +1,11 @@
 package gift.controller.chat;
 
+import gift.controller.chat.apiDocs.ChatRoomApiDocs;
 import gift.domain.chat.ChatRoom;
 import gift.domain.chat.MessageType;
 import gift.domain.user.User;
+import gift.global.ApiResponse.ApiResponse;
+import gift.global.ApiResponse.SuccessCode;
 import gift.global.exception1.user.UserNotFoundException;
 import gift.service.chat.ChatMessageService;
 import gift.service.chat.ChatRoomService;
@@ -10,6 +13,8 @@ import gift.service.dto.chat.ChatRoomInfo;
 import gift.service.user.UserService;
 import gift.util.ImageStorageUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,15 +22,20 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/v1/chat/rooms")
-public class ChatRoomController {
+public class ChatRoomController implements ChatRoomApiDocs {
+
     private final ChatRoomService chatRoomService;
     private final UserService userService;
     private final ImageStorageUtil imageStorageUtil;
     private final ChatMessageService chatMessageService;
 
+    /**
+     * 새로운 채팅룸 생성
+     */
     @PostMapping
-    public ChatRoom createChatRoom(
+    public ResponseEntity<ApiResponse<ChatRoom>> createChatRoom(
             @RequestParam String userEmail1,
             @RequestParam String userEmail2
     ) throws UserNotFoundException {
@@ -36,48 +46,65 @@ public class ChatRoomController {
 
         ChatRoom chatRoom = chatRoomService.createChatRoom(user1, user2);
 
-        // 환영 메시지 생성
+        // Welcome message 추가
         String welcomeMessageContent = "Welcome, " + user2.getEmail() + "!";
         ChatMessageDto chatMessageDto = new ChatMessageDto(user1.getEmail(), welcomeMessageContent, MessageType.ENTER);
         chatMessageService.saveMessage(chatRoom.getId(), chatMessageDto);
 
-        return chatRoom;
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK, chatRoom));
     }
 
-    // 채팅방 번호로 연관 유저 조회 (GET /v1/chat/rooms/{chatRoomId})
+    /**
+     * 특정 채팅룸 조회
+     */
     @GetMapping("/{chatRoomId}")
-    public ChatRoom getChatRoom(@PathVariable Long chatRoomId) {
-        return chatRoomService.getChatRoomById(chatRoomId);
+    public ResponseEntity<ApiResponse<ChatRoom>> getChatRoom(@PathVariable Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomService.getChatRoomById(chatRoomId);
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK, chatRoom));
     }
 
-    // 채팅방 삭제 (DELETE /v1/chat/rooms/{chatRoomId})
+    /**
+     * 채팅룸 삭제
+     */
     @DeleteMapping("/{chatRoomId}")
-    public void deleteChatRoom(@PathVariable Long chatRoomId) {
+    public ResponseEntity<ApiResponse<Void>> deleteChatRoom(@PathVariable Long chatRoomId) {
         chatRoomService.deleteChatRoom(chatRoomId);
-        // 채팅방 삭제 시 이미지 폴더도 삭제
         imageStorageUtil.deleteChatFolder("chatRoom_" + chatRoomId);
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK));
     }
 
-    // 특정 유저의 채팅룸 ID와 제목을 가져오는 API (GET /v1/chat/rooms/user/{userId})
+    /**
+     * 유저가 참여한 채팅룸 조회
+     */
     @GetMapping("/user/{userId}")
-    public List<ChatRoomInfo> getUserChatRooms(@PathVariable Long userId) {
-        return chatRoomService.getChatRoomsByUserId(userId).stream()
+    public ResponseEntity<ApiResponse<List<ChatRoomInfo>>> getUserChatRooms(@PathVariable Long userId) {
+        List<ChatRoomInfo> chatRooms = chatRoomService.getChatRoomsByUserId(userId).stream()
                 .map(chatRoom -> new ChatRoomInfo(chatRoom.getId(), chatRoom.getTitle()))
                 .collect(Collectors.toList());
+
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK, chatRooms));
     }
 
-    // 받은 채팅룸 ID와 해당되는 유저 ID가 일치한다면 제목을 설정하는 API (Patch /v1/chat/rooms/{chatRoomId}/title)
+    /**
+     * 채팅룸 제목 수정
+     */
     @PatchMapping("/{chatRoomId}/title")
-    public void setChatRoomTitle(@PathVariable Long chatRoomId,
-                                 @RequestParam Long userId,
-                                 @RequestParam String title) {
-
+    public ResponseEntity<ApiResponse<Void>> setChatRoomTitle(
+            @PathVariable Long chatRoomId,
+            @RequestParam Long userId,
+            @RequestParam String title
+    ) {
         chatRoomService.setChatRoomTitleIfUserMatches(chatRoomId, userId, title);
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK));
     }
 
+    /**
+     * 모든 채팅룸 조회
+     */
     @GetMapping
-    public List<ChatRoom> getAllChatRooms() {
-        return chatRoomService.getAllChatRooms();
+    public ResponseEntity<ApiResponse<List<ChatRoom>>> getAllChatRooms() {
+        List<ChatRoom> chatRooms = chatRoomService.getAllChatRooms();
+        return ResponseEntity.ok(ApiResponse.success(SuccessCode.OK, chatRooms));
     }
-
 }

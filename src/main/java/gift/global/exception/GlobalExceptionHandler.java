@@ -1,8 +1,8 @@
 package gift.global.exception;
 
-import com.helpmeCookies.global.ApiResponse.ApiResponse;
-import com.helpmeCookies.global.exception.user.DuplicateResourceException;
-import com.helpmeCookies.global.exception.user.ResourceNotFoundException;
+import gift.global.ApiResponse.ApiResponse;
+import gift.global.exception.user.DuplicateResourceException;
+import gift.global.exception.user.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

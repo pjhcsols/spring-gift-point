@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
+/*
 @Builder
 @Getter
 public class JwtUser implements UserDetails {
@@ -59,3 +59,5 @@ public class JwtUser implements UserDetails {
 	}
 
 }
+
+ */

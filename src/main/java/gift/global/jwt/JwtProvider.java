@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
-
+/*
 @Component
 @RequiredArgsConstructor
 public class JwtProvider implements InitializingBean {
@@ -46,6 +46,7 @@ public class JwtProvider implements InitializingBean {
 	토큰 검증시 rawToken을 Claims로 변환하고, 해당 토큰이 accessToken이면서 만료되어있지 않다면 True를 반환한다.
 	 */
 
+/*
 	public boolean validateToken(String rawToken, boolean isAccessToken) {
 		try {
 			Claims claims = extractClaims(rawToken);
@@ -63,6 +64,7 @@ public class JwtProvider implements InitializingBean {
 	 * refreshToken의 유효성을 검사하고, isAccessToken이 true일때만 accessToken을 재발급한다.
 	 * TODO: refreshToken을 저장하고, 저장된 refreshToken과 비교하는 로직 필요 redis 추가 후 구현
 	 */
+/*
 	public String reissueAccessToken(String refreshToken) {
 		Claims claims = extractClaims(refreshToken);
 		if (claims.get(IS_ACCESS_TOKEN, Boolean.class)) {
@@ -113,3 +115,4 @@ public class JwtProvider implements InitializingBean {
 		secretKey = new SecretKeySpec(jwtProperties.getSecret().getBytes(), SignatureAlgorithm.HS256.getJcaName());
 	}
 }
+*/
