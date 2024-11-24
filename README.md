@@ -1,5 +1,40 @@
 # spring-gift-point
 
+# 추가 구현 기능
+## 웹소켓 구현 및 순서도 
+
+클라이언트가 /ws 엔드포인트를 통해 WebSocket 연결을 설정합니다.
+<br>
+클라이언트는 /v1/sub/chat/rooms/{chatRoomId}/list 경로를 구독하여 초기 메시지 목록을 조회할 수 있습니다.
+<br>
+클라이언트는 /v1/sub/chat/rooms/{chatRoomId} 경로를 구독하여 채팅방의 실시간 메시지를 수신할 준비를 합니다.
+<br>
+채팅 메시지를 전송할 때 /v1/pub/chat/{chatRoomId} 또는 /v1/pub/chat/{chatRoomId}/file 경로로 메시지를 서버에 보냅니다.
+<br>
+
+
+
+채팅룸 기능
+1. 유저의 채팅방 전체 조회 : 특정 유저의 채팅룸 ID와 제목을 가져오는 API (GET /v1/chat/rooms/user/{userId})
+2. 채팅방 제목 설정 및 수정: 받은 채팅룸 ID와 해당되는 유저 ID가 일치한다면 제목을 설정하는 API (Patch /v1/chat/rooms/{chatRoomId}/title)
+
+채팅 기능
+
+/v1/chat/rooms/{chatRoomId}/messages
+
+// 특정 채팅방의 메시지를 시간 순서대로 반환
+->실시간 성 보장 x 필요할때 사용
+
+
+웹소켓 기능
+<-실시간 보장
+
+/chat/{chatRoomId} - 메시지 전송
+
+/chat/{chatRoomId}/file - 파일 전송
+
+/chat/rooms/{chatRoomId}/list 채팅방에 속한 메시지를 시간순으로 가져옴
+
 # step3
 Feat: 포인트 기능 구현 [박한솔]
 * Point 도메인 클래스 생성 및 포인트 충전, 사용, 적립 기능 구현
